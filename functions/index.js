@@ -15,8 +15,9 @@ exports.getQuestions = functions.https.onRequest((request, response) => {
 });
 
 exports.updateUserResponse = functions.https.onRequest((request, response) => {
-    if (request.data) {
-        return db.collection("/userResponse").add(request.data)
+    const body = request.body;
+    if (body.data) {
+        return db.collection("/userResponse").add(body.data)
             .then((d) => response.send(d.id)).catch((e) => response.send(e));
     } else {
         return response.send("no response");
@@ -24,9 +25,10 @@ exports.updateUserResponse = functions.https.onRequest((request, response) => {
 });
 
 exports.updatePlayerResponse = functions.https.onRequest((request, response) => {
-    if (request.data.id && request.data.name && request.data.score) {
-        const respRef = db.collection('/userResponse').doc(request.data.id);
-        const usrResponse = { name: request.data.name, score: request.data.score };
+    const body = request.body;
+    if (body.data.id && body.data.name && body.body.data.score) {
+        const respRef = db.collection('/userResponse').doc(body.data.id);
+        const usrResponse = { name: body.data.name, score: body.data.score };
         return db.runTransaction(transaction => {
             // This code may get re-run multiple times if there are conflicts.
             return transaction.get(respRef).then(doc => {
@@ -54,8 +56,8 @@ exports.updatePlayerResponse = functions.https.onRequest((request, response) => 
 });
 
 exports.getPlayerQuestionsAndResponses = functions.https.onRequest((request, response) => {
-    if (request.id) {
-        return db.collection("/userResponse").doc(request.id).get().then((doc) => {
+    if (request.query.user) {
+        return db.collection("/userResponse").doc(request.query.user).get().then((doc) => {
             return response.send({ questions: doc.questions, responses: doc.responses });
         }).catch(e => response.send(e));
     } else {
