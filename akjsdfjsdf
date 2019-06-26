@@ -1,0 +1,17 @@
+[1mdiff --git a/functions/index.js b/functions/index.js[m
+[1mindex f93a241..79f0d43 100644[m
+[1m--- a/functions/index.js[m
+[1m+++ b/functions/index.js[m
+[36m@@ -58,10 +58,10 @@[m [mexports.updatePlayerResponse = functions.https.onRequest((request, response) =>[m
+ exports.getPlayerQuestionsAndResponses = functions.https.onRequest((request, response) => {[m
+     if (request.query.user) {[m
+         return db.collection("/userResponse").doc(request.query.user).get().then((doc) => {[m
+[31m-            return response.send({ questions: doc.questions, responses: doc.responses });[m
+[32m+[m[32m            return response.send({ questions: doc.data().questions, responses: doc.data().responses });[m
+         }).catch(e => response.send(e));[m
+     } else {[m
+         console.log('received invalid request: ' + request);[m
+[31m-        return response.send(500);[m
+[32m+[m[32m        return response.send(400);[m
+     }[m
+ });[m

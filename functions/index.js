@@ -58,10 +58,10 @@ exports.updatePlayerResponse = functions.https.onRequest((request, response) => 
 exports.getPlayerQuestionsAndResponses = functions.https.onRequest((request, response) => {
     if (request.query.user) {
         return db.collection("/userResponse").doc(request.query.user).get().then((doc) => {
-            return response.send({ questions: doc.questions, responses: doc.responses });
+            return response.send({ questions: doc.data().questions, responses: doc.data().responses });
         }).catch(e => response.send(e));
     } else {
         console.log('received invalid request: ' + request);
-        return response.send(500);
+        return response.send(400);
     }
 });
